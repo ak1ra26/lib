@@ -1,0 +1,10 @@
+confirm() {
+  local prompt="${1:-Are you sure you want to continue?} [${c_green}Y${NC}/${c_red}n${NC}]: "
+  echo -en "$prompt"
+  read -n 1 choice
+  case "$choice" in
+    y|Y ) return 0;;
+    n|N ) return 1;;
+    * ) echo "Invalid choice"; return 1;;
+  esac
+}

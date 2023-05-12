@@ -1,0 +1,7 @@
+error() {
+  if [ "$1" = "-v" ]; then
+    verbose "${c_red}${2:-FALSE}${NC}"
+  else
+    echo -e "${c_red}${1:-FALSE}${NC}"
+  fi
+}

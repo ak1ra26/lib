@@ -1,0 +1,51 @@
+# Setting up BASH
+export HISTCONTROL=ignoreboth:erasedups # ignoring duplicates in history
+#export HISTIGNORE='ls::#!*:set\ +o*:history*' # ignore specific commands
+export HISTIGNORE='ls:exit:reboot:shutdown:#*:set\ +o*:history*' # ignore specific commands by ChatGPT... testing
+PROMPT_COMMAND='history -a' # save command history until the end of the session
+export HISTTIMEFORMAT='%H:%M ' # add execution time
+set +H # disable history expansion in scripts to avoid "event not found" errors
+alias ls='ls --color=auto'; alias ді='ls'
+PS1='[\u@\h \W]\$ '
+export VISUAL=vim
+alias rm='rm -I --preserve-root' # на усяк випадок
+
+# dirs
+Dir_Data=`lsblk -o MOUNTPOINT | grep 'Data'`
+Dir_Mega=$Dir_Data/Mega
+Dir_lib="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+
+# functions
+for file in $Dir_lib/functions/*.fn; do . "$file"; done
+PROMPT_COMMAND='if [ $? -eq 127 ]; then command_not_found_handle "$(history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//")"; fi'
+
+# shutdown & reboot
+if [ $UID -ne 0 ]; then
+alias reboot='sudo reboot'; alias куищще='reboot'
+alias poweroff='sudo /sbin/poweroff'; alias зщцукщаа='poweroff'
+alias halt='sudo /sbin/halt'; alias рфде='halt'
+alias shutdown='sudo /sbin/shutdown'; alias іргевщцт='shutdown'
+alias pacman='sudo pacman'
+fi
+
+# my commands
+alias c='clear'; alias с='c'; # бо лінь
+alias update='yay -Syu';
+alias updatec='yay -Syu && yay -Sc';
+alias cd..='cd ..' # якщо пальці криві
+alias myip='curl -s "https://ipinfo.io/ip" && echo'; # get my public IP adress
+alias autostart="function _create_autostart() { script_name=\$1; script_path=\$(realpath \$1); desktop_file=\"\$HOME/.config/autostart/\$(basename \$script_name).desktop\"; echo -e \"[Desktop Entry]\nType=Application\nName=\$(basename \$script_name)\nExec=\$script_path\nTerminal=false\nX-KDE-autostart-phase=1\" > \$desktop_file; chmod +x \$script_path; }; _create_autostart"
+alias libcheck='OK; echo "Path to lib: $Dir_lib"';
+
+# git
+alias gpush='git add . && git commit -m "${1:-update}" && git push'; alias pgit=gpush;
+
+# my scripts
+alias a4='$Dir_lib/scripts/a4.sh';
+alias a4e='$Dir_lib/scripts/a4.sh & exit';
+alias 2cc='$Dir_lib/scripts/a4.sh -nikki & exit';
+alias dv='$Dir_lib/scripts/dv.sh';
+alias t='$Dir_lib/scripts/tasks.sh';
+alias vpn='$Dir_lib/scripts/vpn.sh';
+alias m='$Dir_lib/scripts/music.sh'; alias music=m;
+alias sort='$Dir_lib/scripts/sort_downloads.sh';

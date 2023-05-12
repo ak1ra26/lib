@@ -1,0 +1,1 @@
+verbose() { $VERBOSE && echo -e "${c_yellow}$@${NC}" || :; }

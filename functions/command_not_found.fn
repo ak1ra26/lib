@@ -1,0 +1,12 @@
+function command_not_found_handle() {
+  if echo "$1" | grep -q '[ёЁъЪыЫэЭ]'; then
+    echo -e "${c_red}Русский военный корабль, иди на хуй${NC}" >&2
+  elif echo "$1" | grep -q '[а-яА-Я]'; then
+    echo -e "${c_red}Команда містить кирилицю, змініть розкладку:${NC} $1" >&2
+  elif echo "$1" | grep -q '[ぁ-ゔゞ゛゜ゝゞゟ゠ア-ンヴー一-龠々〆〤]'; then
+    echo -e "${c_red}Команда містить японську абетку або кандзі, змініть розкладку:${NC} $1" >&2
+  else
+    echo -e "${c_red}Command not found:${NC} $1" >&2
+  fi
+  return 1
+}

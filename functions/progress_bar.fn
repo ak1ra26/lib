@@ -1,0 +1,23 @@
+progress_bar() {
+  local duration=$1
+  local total_width=20
+  local sleep_duration=$(echo "scale=4; $duration / $total_width" | bc)
+  local i=0
+  while [ $i -le $total_width ]; do
+    printf "\r["
+    local j=0
+    while [ $j -lt $i ]; do
+      printf "="
+      let j+=1
+    done
+    printf ">"
+    while [ $j -lt $total_width ]; do
+      printf " "
+      let j+=1
+    done
+    printf "]"
+    let i+=1
+    sleep $sleep_duration
+  done
+  printf "\n"
+}

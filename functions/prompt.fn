@@ -1,0 +1,6 @@
+prompt() {
+  local message=$1
+  local default=$2
+  read -p "$message [$default] " input
+  echo "${input:-$default}"
+}

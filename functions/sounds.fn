@@ -1,0 +1,17 @@
+if [ -x "$(command -v aplay)" ]; then
+  aplay=aplay
+elif [ -x "$(command -v play)" ]; then
+  aplay=play
+else
+  error "Не знайдено команду для відтворення звуку" >&2
+  return
+fi
+
+function s_error () { $aplay $Dir_lib/sounds/error_1.wav &>/dev/null; }
+function s_done () { $aplay $Dir_lib/sounds/done_1.wav &>/dev/null; }
+function s_beep () { $aplay $Dir_lib/sounds/beep_1.wav &>/dev/null; }
+function s_oops () { $aplay $Dir_lib/sounds/oops_1.wav &>/dev/null; }
+function s_scream () { $aplay $Dir_lib/sounds/scream_1.wav &>/dev/null; }
+function s_ring1 () { $aplay $Dir_lib/sounds/ring_1.wav &>/dev/null; }
+function s_ring2 () { $aplay $Dir_lib/sounds/ring_2.wav &>/dev/null; }
+function s_prscr () { $aplay $Dir_lib/sounds/prscr.wav &>/dev/null; }
