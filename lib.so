@@ -14,6 +14,8 @@ alias rm='rm -I --preserve-root' # на усяк випадок
 Dir_Data=`lsblk -o MOUNTPOINT | grep 'Data'`
 Dir_Mega=$Dir_Data/Mega
 Dir_lib="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+Dir_cache="Dir_lib/.cache"
+Dir_config="Dir_lib/.config"
 
 # functions
 for file in $Dir_lib/functions/*.fn; do . "$file"; done

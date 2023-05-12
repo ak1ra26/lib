@@ -1,9 +1,8 @@
 #!/bin/bash -i
 init_i # initialize settings for interactive scripts
 
-config_file="$HOME/lib/dv.cfg"
-cache_dir="$HOME/lib/.cache"
-dv_last="$cache_dir/dv_last"
+config_file="$Dir_config/dv.cfg"
+dv_last="$Dir_cache/dv_last"
 
 [[ $1 == "-ff" ]] && { profile="0tpwhv3c.default-release"; shift; } || profile="ccrfprqf.default-beta"
 
@@ -45,7 +44,7 @@ do
     esac
     [ ! -d "$Dir_Data/Media/$dvpath" ] && mkdir -p "$Dir_Data/Media/$dvpath"
     OK "Downloading $((count - ${#arrLinks[@]} + 1)) from from ${#arrLinks[@]} ${NC}"
-    yt-dlp -P "$Dir_Data/Media/$dvpath" --cookies-from-browser firefox:"/home/$USER/.mozilla/firefox/$profile/" --mark-watched --download-archive "$cache_dir/$log_file" -f 'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv*+ba/b' --embed-thumbnail --sub-langs en,uk --embed-subs --embed-metadata --no-progress $i -o '%(title)s [%(id)s].%(ext)s' --no-warnings --no-simulate
+    yt-dlp -P "$Dir_Data/Media/$dvpath" --cookies-from-browser firefox:"/home/$USER/.mozilla/firefox/$profile/" --mark-watched --download-archive "$Dir_cache/$log_file" -f 'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv*+ba/b' --embed-thumbnail --sub-langs en,uk --embed-subs --embed-metadata --no-progress $i -o '%(title)s [%(id)s].%(ext)s' --no-warnings --no-simulate
     count=$((count - 1))
     notify-send -a "DV" "Downloading" "Left: $count from ${#arrLinks[@]}"
 done
