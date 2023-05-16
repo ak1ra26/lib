@@ -39,7 +39,10 @@ alias autostart="function _create_autostart() { script_name=\$1; script_path=\$(
 alias libcheck='OK; echo "Path to lib: $Dir_lib"';
 
 # git
-alias gpush='git add . && git commit -m "${1:-update}" && git push'; alias pgit=gpush;
+gpush() {
+  git add . && git commit -m "${1:-update}" && git push
+}
+alias pgit=gpush
 
 # my scripts
 alias a4='$Dir_lib/scripts/a4.sh';
