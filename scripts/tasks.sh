@@ -29,13 +29,22 @@ function usage {
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -h|--help|-р) usage; exit 0;;
-        -v|--verbose|-м) VERBOSE=true; shift ;;
-        -o|--op|-щ|--щз) mode=op; shift ;;
+        -v|--verbose|-м) VERBOSE=true;;
+        -o|--op|-щ|--щз) mode=op; verbose "OP mode is ON";;
         -f|--file|-а) TASK_FILE="$2"; shift ;;
         *) error "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
 done
+
+# Function to clear the screen
+function clear_screen {
+    if [ "$VERBOSE" = true ]; then
+        verbose "Clearing screen is disabled in verbose mode."
+    else
+        clear
+    fi
+}
 
 # check if the task file exists, create it if it doesn't
 verbose "Checking if tasks file exists"
@@ -47,14 +56,15 @@ else
     OK
 fi
 
-# Function to clear the screen
-function clear_screen {
-    if [ "$VERBOSE" = true ]; then
-        verbose "Clearing screen is disabled in verbose mode."
-    else
-        clear
-    fi
-}
+# check if the OPT file exists, create it if it doesn't
+verbose "Checking if OPT file exists"
+if [ ! -f "$OP_FILE" ]; then
+    confirm "Task file not found. Do you want to create it?" || exit 1
+    touch "$OP_FILE"
+    verbose "OPT file created"
+else
+    OK
+fi
 
 function add_space {
     if [ "$1" -le 9 ] && [ "$(wc -l < "$TASK_SPACE")" -ge 10 ]; then echo "$1.  "; else echo "$1. "; fi
