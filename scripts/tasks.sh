@@ -28,10 +28,10 @@ function usage {
 # Parse command line arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        -h|--help|-р) usage; exit 0;;
-        -v|--verbose|-м) VERBOSE=true;;
-        -o|--op|-щ|--щз) mode=op; verbose "OP mode is ON";;
-        -f|--file|-а) TASK_FILE="$2"; shift ;;
+        -h|--help) usage; exit 0;;
+        -v|--verbose) VERBOSE=true;;
+        -o|--op|--opt) mode=op; verbose "OP mode is ON";;
+        -f|--file) TASK_FILE="$2"; shift ;;
         *) error "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
