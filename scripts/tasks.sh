@@ -2,23 +2,27 @@
 init_i # initialize settings for interactive scripts
 
 # Path to the tasks file
-TASK_FILE="$Dir_lib/.cache/tasks.txt"
+TASK_FILE="$Dir_cache/tasks"
+OP_FILE="$Dir_cache/tasks_op"
 VERBOSE=false
+mode=task
 editor=vim
 
 # Usage information function
 function usage {
-    echo "Usage: t [-h|--help] [-v|--verbose] [-f|--file <task_file>]"
+    echo "Usage: t [-h|--help] [-v|--verbose] [-o|--op] [-f|--file <task_file>]"
     echo "Options:"
     echo "  -h, --help              Display this usage information"
     echo "  -v, --verbose           Enable verbose output"
+    echo "  -o, --op                Enable OPT mode"
     echo "  -f, --file <task_file>  Path to the task file (default: $TASK_FILE)"
     echo ""
     echo "Hints:"
-    echo -e "Tasks starting with \"!\" will be displayed in ${c_blue}blue${NC} - important tasks."
-    echo -e "Tasks starting with \"-\" will be displayed in ${c_gray}gray${NC} - postponed tasks."
-    echo -e "Tasks starting with \"@w\" will be displayed in ${c_pink}pink${NC} - tasks that can be done while working."
-    echo -e "Tasks starting with \"@f\" will be displayed in ${c_green}green${NC} - tasks to do in your days off."
+    echo -e "Task starting with \"!\" will be displayed in ${c_blue}blue${NC} - important task."
+    echo -e "Task starting with \"-\" will be displayed in ${c_gray}gray${NC} - postponed task."
+    echo -e "Task starting with \"@w\" will be displayed in ${c_pink}pink${NC} - task that can be done while working."
+    echo -e "Task starting with \"@f\" will be displayed in ${c_green}green${NC} - task to do in your days off."
+    echo -e "Task starting with \"1%\" will be added in OPT - tasks that only take up 1% of my time."
 }
 
 # Parse command line arguments
@@ -26,6 +30,7 @@ while [[ "$#" -gt 0 ]]; do
     case $1 in
         -h|--help|-р) usage; exit 0;;
         -v|--verbose|-м) VERBOSE=true; shift ;;
+        -o|--op|-щ|--щз) mode=op; shift ;;
         -f|--file|-а) TASK_FILE="$2"; shift ;;
         *) error "Unknown parameter passed: $1"; exit 1 ;;
     esac
@@ -52,51 +57,56 @@ function clear_screen {
 }
 
 function add_space {
-    if [ "$1" -le 9 ] && [ "$(wc -l < "$TASK_FILE")" -ge 10 ]; then echo "$1.  "; else echo "$1. "; fi
+    if [ "$1" -le 9 ] && [ "$(wc -l < "$TASK_SPACE")" -ge 10 ]; then echo "$1.  "; else echo "$1. "; fi
 }
 
+# function checkbox {
+#     # echo -e "Enable: \033[32m✓\033[0m"
+# }
+
 function display_tasks {
+    verbose "Displaying OP tasks"
+    if [ -s "$OP_FILE" ]; then
+        [[ "$mode" == "op" ]] && echo "→ OPT:" || echo "OPT:"
+        lineno=1
+        TASK_SPACE=$OP_FILE
+        while read -r line; do
+            line="${line:2}" # Removes the first characters from the line
+            if [ "$lineno" = "$1" ]; then
+                echo -e "${c_red}$(add_space $lineno)$line${NC}"
+            else
+                echo -e "$(add_space $lineno)$line"
+            fi
+            ((lineno++))
+        done < "$OP_FILE"
+        echo;
+    else
+        error "No OP file"
+    fi
     verbose "Displaying tasks"
-    echo "Tasks:"
+    [[ "$mode" == "task" ]] && echo "→ Tasks:" || echo "Tasks:"
     if [ -s "$TASK_FILE" ]; then # Checks if the task file is not empty
         lineno=1 # Initializes the line counter
+        TASK_SPACE=$TASK_FILE
         while read -r line; do
-            if [ "${line:0:1}" = "!" ]; then # Checks if the first character of the line is "!"
-                line="${line:1}" # Removes the first character from the line
-                if [ "$lineno" = "$1" ]; then
-                    echo -e "${c_red}$(add_space $lineno)$line${NC}"
-                else
-                    echo -e "${c_blue}$(add_space $lineno)$line${NC}"
-                fi
-            elif [ "${line:0:2}" = "@w" ]; then # Checks if the first two characters of the line are "@w"
-                line="${line:2}" # Removes the first character from the line
-                if [ "$lineno" = "$1" ]; then
-                    echo -e "${c_red}$(add_space $lineno)$line${NC}"
-                else
-                    echo -e "${c_pink}$(add_space $lineno)$line${NC}"
-                fi
-            elif [ "${line:0:1}" = "-" ]; then # Checks if the first two characters of the line are "@w"
-                line="${line:1}" # Removes the first character from the line
-                if [ "$lineno" = "$1" ]; then
-                    echo -e "${c_red}$(add_space $lineno)$line${NC}"
-                else
-                    echo -e "${c_gray}$(add_space $lineno)$line${NC}"
-                fi
-            elif [ "${line:0:2}" = "@f" ]; then # Checks if the first two characters of the line are "@f"
-                line="${line:2}" # Removes the first character from the line
-                if [ "$lineno" = "$1" ]; then
-                    echo -e "${c_red}$(add_space $lineno)$line${NC}"
-                else
-                    echo -e "${c_green}$(add_space $lineno)$line${NC}"
-                fi
-            else
-                if [ "$lineno" = "$1" ]; then
-                    echo -e "${c_red}$(add_space $lineno)$line${NC}"
-                else
-                    echo "$(add_space $lineno)$line"
-                fi
+        var_c=""
+            if [ "$lineno" = "$1" ]; then
+                var_c="${c_red}"
+            elif [ "${line:0:1}" = "!" ]; then
+                var_c="${c_blue}"
+                line="${line:1}"
+            elif [ "${line:0:2}" = "@w" ]; then
+                var_c="${c_pink}"
+                line="${line:2}"
+            elif [ "${line:0:1}" = "-" ]; then
+                var_c="${c_gray}"
+                line="${line:1}"
+            elif [ "${line:0:2}" = "@f" ]; then
+                var_c="${c_green}"
+                line="${line:2}"
             fi
-            ((lineno++)) # Increments the line counter by 1
+        echo -e "${var_c}$(add_space $lineno)$line${NC}"
+        ((lineno++)) # Increments the line counter by 1
         done < "$TASK_FILE"
         echo;
     else
@@ -122,7 +132,11 @@ function add_task {
             cat "$tmp_file"
             error "New task not saved."
         elif [[ "$task" =~ [^[:space:]] ]]; then
-            echo "$task" >> "$TASK_FILE"
+            if [[ "$task" =~ ^1% ]]; then
+                echo "$task" >> "$OP_FILE"
+            else
+                echo "$task" >> "$TASK_FILE"
+            fi
             clear_screen
             display_tasks
             OK "Task added."
@@ -205,7 +219,7 @@ display_tasks;
 
 # Main loop
 while true; do
-    printf "What do you want to do? (${c_red}d${NC}isplay, ${c_red}a${NC}dd, ${c_red}e${NC}dit, ${c_red}r${NC}emove, ${c_red}h${NC}elp, ${c_red}q${NC}uit): "
+    printf "What do you want to do? (${c_red}d${NC}isplay, ${c_red}a${NC}dd, ${c_red}e${NC}dit, ${c_red}r${NC}emove, ${c_red}m${NC}ode, ${c_red}h${NC}elp, ${c_red}q${NC}uit): "
     read choice
     clear_screen
     case $choice in
@@ -221,6 +235,8 @@ while true; do
         r|к)
             display_tasks
             delete_task;;
+        m|ь)
+            [[ "$mode" == "task" ]] && mode="op" || mode="task" && OK "Mod changed to: $mode"; clear_screen; display_tasks;;
         q|й)
             verbose Exit; break;;
         *)
