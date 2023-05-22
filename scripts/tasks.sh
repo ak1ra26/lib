@@ -12,6 +12,7 @@ forced=""
 
 # Usage information function
 function usage {
+    verbose "Displaying help"
     echo "Usage: t [-h|--help] [-v|--verbose] [-o|--op|--opt]"
     echo "Options:"
     echo "  -h, --help              Display this usage information"
@@ -69,10 +70,6 @@ function add_space {
     if [ "$1" -le 9 ] && [ "$(wc -l < "$TASK_SPACE")" -ge 10 ]; then echo "$1.  "; else echo "$1. "; fi
 }
 
-# function checkbox {
-#     # echo -e "Enable: \033[32m✓\033[0m"
-# }
-
 function display_tasks {
     verbose "Displaying OP tasks"
     if [ -s "$OP_FILE" ]; then # Checks if the OPT file is not empty
@@ -99,7 +96,7 @@ function display_tasks {
         error "No OP file"
     fi
     verbose "Displaying tasks"
-    [[ "$mode" == "task" ]] && echo "→ Tasks:" || echo "Tasks:"
+    [[ "$mode" == "task" ]] && echo -e "→ Tasks:$forced" || echo "Tasks:"
     if [ -s "$TASK_FILE" ]; then # Checks if the task file is not empty
         lineno=1 # Initializes the line counter
         TASK_SPACE=$TASK_FILE
@@ -119,11 +116,9 @@ function display_tasks {
             else
                 var_c="${NC}"
             fi
-            if [ "$lineno" = "$1" ] && [[ "$mode" == "task" ]]; then
-                var_c="${c_red}"
-            fi
-        echo -e "${var_c}$(add_space $lineno)$line${NC}"
-        ((lineno++))
+            if [ "$lineno" = "$1" ] && [[ "$mode" == "task" ]]; then var_c="${c_red}"; fi
+            echo -e "${var_c}$(add_space $lineno)$line${NC}"
+            ((lineno++))
         done < "$TASK_FILE"
         echo;
     else
@@ -268,19 +263,62 @@ function mark_opt {
     OK "Task marked."
 }
 
+function task_tag {
+    verbose "Adding tag to a task"
+    get_num "Enter the number of the task to tag"
+    if [ "$num" = "q" ]; then return; fi
+    if [ "$num" -gt "$(wc -l < "$TASK_FILE")" ]; then
+        echo -e "${c_red}Invalid task number.${NC}"
+        task_tag
+        return
+    fi
+    clear_screen
+    display_tasks "$num"
+    printf "What tag do you want to add? (${c_red}c${NC}lear tag, ${c_red}i${c_blue}mportant${NC}, ${c_red}f${c_green}ree${NC}, ${c_red}w${c_pink}ork${NC}, ${c_red}p${c_gray}ostponed${NC}, ${c_red}q${NC}uit): "
+    read choice
+    clear_screen
+    case $choice in
+        c)
+            tag="";;
+        i)
+            tag="!";;
+        f)
+            tag="@f";;
+        w)
+            tag="@w";;
+        p)
+            tag="-";;
+        q)
+            verbose "Exit"; return;;
+        *)
+            error "Invalid choice.";;
+    esac
+
+    # Змінюємо рядок з тегами в файлі
+    # sed -i "${num}s/^\([!-]\|@\([fw]\)\)\(.*\)$/\\1$tag\3/; t; ${num}!s/^/$tag/" "$TASK_FILE"
+    sed -i "${num} { /^\([!-]\|@\([fw]\)\)/ s//${tag}/; t; s/^/${tag}/; }" "$TASK_FILE"
+    clear_screen
+    display_tasks
+    OK "Tag added."
+}
+
 clear_screen;
 display_tasks;
 
 # Main loop
 while true; do
     if [[ $mode == "task" ]]; then
-    printf "What do you want to do? (${c_red}d${NC}isplay, ${c_red}a${NC}dd, ${c_red}e${NC}dit, ${c_red}r${NC}emove, ${c_red}m${NC}ode, ${c_red}h${NC}elp, ${c_red}q${NC}uit): "
+    printf "What do you want to do? (${c_red}t${NC}ag, ${c_red}d${NC}isplay, ${c_red}a${NC}dd, ${c_red}e${NC}dit, ${c_red}r${NC}emove, ${c_red}m${NC}ode, ${c_red}h${NC}elp, ${c_red}q${NC}uit): "
     else
     printf "What do you want to do? (${c_red}v${NC} - mark as done, ${c_red}d${NC}isplay, ${c_red}a${NC}dd, ${c_red}e${NC}dit, ${c_red}r${NC}emove, ${c_red}m${NC}ode, ${c_red}h${NC}elp, ${c_red}q${NC}uit): "
     fi
     read choice
     clear_screen
     case $choice in
+        t|е)
+            [[ "$mode" == "op" ]] && { mode="task"; forced=" ${c_red}(forced)${NC}"; verbose "Forced into task mode"; }
+            display_tasks
+            task_tag;;
         d|в)
             display_tasks;;
         v|м)
@@ -289,7 +327,7 @@ while true; do
         a|ф)
             add_task;;
         h|р)
-            verbose "Displaying help"; usage; echo;;
+            usage; echo;;
         e|у)
             display_tasks
             edit_task;;
@@ -297,7 +335,7 @@ while true; do
             display_tasks
             delete_task;;
         m|ь)
-            [[ "$mode" == "task" ]] && { mode="op"; FILE="$OP_FILE"; } || { mode="task"; FILE="$TASK_FILE"; forced=""; }
+            [[ "$mode" == "task" ]] && { mode="op"; FILE="$OP_FILE"; forced=""; } || { mode="task"; FILE="$TASK_FILE"; forced=""; }
             OK "Mod changed to: $mode"
             clear_screen
             display_tasks;;
