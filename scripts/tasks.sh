@@ -17,13 +17,13 @@ function usage {
     echo "Options:"
     echo "  -h, --help              Display this usage information"
     echo "  -v, --verbose           Enable verbose output"
-    echo "  -o, --op, --opt         Enable OPT mode - tasks that only take up 1% of my time."
+    echo "  -o, --op, --opt         Enable OPT mode - tasks that take up only 1% of my time."
     echo ""
     echo "Hints:"
-    echo -e "Task starting with \"!\" will be displayed in ${c_blue}blue${NC} - important task."
-    echo -e "Task starting with \"-\" will be displayed in ${c_gray}gray${NC} - postponed task."
-    echo -e "Task starting with \"@w\" will be displayed in ${c_pink}pink${NC} - task that can be done while working."
-    echo -e "Task starting with \"@f\" will be displayed in ${c_green}green${NC} - task to do in your days off."
+    echo -e "Displayed in ${c_blue}blue${NC} - indicating important tasks."
+    echo -e "Displayed in ${c_gray}gray${NC} - indicating postponed tasks."
+    echo -e "Displayed in ${c_pink}pink${NC} - indicating tasks that can be done while working."
+    echo -e "Displayed in ${c_green}green${NC} - indicating tasks to do on your days off."
 }
 
 # Parse command line arguments
@@ -278,20 +278,20 @@ function task_tag {
     read choice
     clear_screen
     case $choice in
-        c)
+        c|"")
             tag="";;
-        i)
+        i|!)
             tag="!";;
         f)
             tag="@f";;
         w)
             tag="@w";;
-        p)
+        p|-)
             tag="-";;
         q)
-            verbose "Exit"; return;;
+            verbose "Exit"; display_tasks; return;;
         *)
-            error "Invalid choice.";;
+            error "Invalid choice."; verbose "Exit"; display_tasks; return;;
     esac
 
     # Змінюємо рядок з тегами в файлі
@@ -342,6 +342,6 @@ while true; do
         q|й)
             verbose Exit; break;;
         *)
-            error "Invalid choice.";;
+            error "Invalid choice."; verbose "Exit"; display_tasks; return;;
     esac
 done
