@@ -146,6 +146,7 @@ function add_task {
             else
                 echo "$task" >> "$FILE"
             fi
+            echo "[$(date +'%y%m-%d %H:%M')] added [${task}]" >> "$FILE.log"
             clear_screen
             display_tasks
             OK "Task added."
@@ -154,6 +155,7 @@ function add_task {
             return
         fi
     else
+        display_tasks
         error "Task not added."
     fi
     verbose "Remove the temporary file"
@@ -189,12 +191,13 @@ function edit_task {
         # Check if the edited task is not empty or contain only whitespace characters
         edited_task=$(cat "$tmp_file")
         if [[ ! "$edited_task" =~ ^[[:space:]]*$ ]]; then
-                if [ "$mode" = "op" ]; then
-                sed -i "${num}s/].*/]$edited_task/" "$FILE" # test this!!!!!!!!
-                else
-                # replace the task in the original file with the edited task from the temporary file
-                awk -v num="$num" -v task="$edited_task" 'BEGIN { FS="\n"; OFS="\n" } { if (NR==num) { $0=task } print }' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
-                fi
+            echo "[$(date +'%y%m-%d %H:%M')] edited from [$(sed -n "${num}p" "$FILE")] to [${edited_task}]" >> "$FILE.log"
+            if [ "$mode" = "op" ]; then
+            sed -i "${num}s/].*/]$edited_task/" "$FILE"
+            else
+            # replace the task in the original file with the edited task from the temporary file
+            awk -v num="$num" -v task="$edited_task" 'BEGIN { FS="\n"; OFS="\n" } { if (NR==num) { $0=task } print }' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
+            fi
             OK
             clear_screen
             display_tasks
@@ -224,6 +227,7 @@ function delete_task {
     clear_screen
     display_tasks "$num"
     confirm "Are you sure you want to delete ${c_red}this${NC} task?" || { clear_screen; display_tasks; return; }
+    echo "[$(date +'%y%m-%d %H:%M')] deleted [$(sed -n "${num}p" "$FILE")]"  >> "$FILE.log"
     sed -i "${num}d" "$FILE"
     clear_screen
     display_tasks
