@@ -49,7 +49,7 @@ function clear_screen {
 # check if the task file exists, create it if it doesn't
 verbose "Checking if tasks file exists"
 if [ ! -f "$TASK_FILE" ]; then
-    confirm "Task file not found. Do you want to create it?" || exit 1
+    confirm "Task file is not found. Do you want to create it?" || exit 1
     touch "$TASK_FILE"
     verbose "Task file created"
 else
@@ -59,11 +59,28 @@ fi
 # check if the OPT file exists, create it if it doesn't
 verbose "Checking if OPT file exists"
 if [ ! -f "$OP_FILE" ]; then
-    confirm "OPT file not found. Do you want to create it?" || exit 1
+    confirm "OPT file is not found. Do you want to create it?" || exit 1
     touch "$OP_FILE"
     verbose "OPT file created"
 else
     OK
+fi
+
+verbose "Checking if $editor is installed"
+if ! command -v $editor &>/dev/null; then
+    error "$editor не встановлено"
+    confirm "$editor is not found. Would you like to install it?" || exit 1
+    if [ -x "$(command -v apt)" ]; then
+        sudo apt update
+        sudo apt install vim -y
+    elif [ -x "$(command -v pacman)" ]; then
+        sudo pacman -Sy vim --noconfirm
+    else
+    error "Не підтримується дистрибутив Linux. Встановіть $editor вручну"
+    exit 1
+    fi
+    else
+        OK
 fi
 
 function add_space {
