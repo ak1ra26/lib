@@ -337,13 +337,13 @@ while true; do
     clear_screen
     case $choice in
         t|е)
-            [[ "$mode" == "op" ]] && { mode="task"; forced=" ${c_red}(forced)${NC}"; verbose "Forced into task mode"; }
+            [[ "$mode" == "op" ]] && { mode="task"; forced=" ${c_red}(forced)${NC}"; FILE="$TASK_FILE"; verbose "Forced into task mode"; }
             display_tasks
             task_tag;;
         d|в)
             display_tasks;;
         v|м)
-            [[ ! "$mode" == "op" ]] && { mode="op"; forced=" ${c_red}(forced)${NC}"; verbose "Forced into OTP mode"; }
+            [[ ! "$mode" == "op" ]] && { mode="op"; forced=" ${c_red}(forced)${NC}"; FILE="$OP_FILE"; verbose "Forced into OTP mode"; }
             display_tasks; mark_opt;;
         a|ф)
             add_task;;
