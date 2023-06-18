@@ -363,6 +363,6 @@ while true; do
         q|й)
             verbose Exit; break;;
         *)
-            error "Invalid choice."; verbose "Exit"; display_tasks; return;;
+            error "Invalid choice."; verbose "Exit"; display_tasks;;
     esac
 done
