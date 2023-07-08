@@ -53,3 +53,5 @@ alias t='$Dir_lib/scripts/tasks.sh';
 alias vpn='$Dir_lib/scripts/vpn.sh';
 alias m='$Dir_lib/scripts/music.sh'; alias music=m;
 alias sort='$Dir_lib/scripts/sort_downloads.sh';
+
+URN=alex
