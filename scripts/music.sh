@@ -2,7 +2,7 @@
 init_i # initialize settings for interactive scripts
 
 MUSIC_PATH="$Dir_Data/Media/Music"
-MUSIC_PLAYER="vlc"
+MUSIC_PLAYER="mpg123"
 MUSIC_LIST=""
 OPTION=""
 VERBOSE=false
@@ -15,7 +15,8 @@ function usage {
 echo -e "Usage: music [-(playlist)|-p|-k] [-v] [-mpg]\n\
 Options:\n\
 -v|--verbose         Verbose output\n\
--mpg|--mpg123        Use mpg123 instead of vlc\n\
+-mpg|--mpg123        Use vlc instead of mpg123\n\
+-vlc                 Use mpg123 instead of vlc\n\
 -k|-s|--kill|--stop  Stop the process and exit\n\
 -p|--pause           Pause or resume music playback\n\
 \n\
@@ -91,6 +92,7 @@ while [[ "$#" -gt 0 ]]; do
         -v|--verbose) VERBOSE=true; shift ;;
         -h|--help) usage; exit 0;;
         -mpg|--mpg123) MUSIC_PLAYER=mpg123; shift ;;
+        -vlc) MUSIC_PLAYER=vlc; shift ;;
         -p|--pause) OPTION=p; shift ;;
         -s|-k|--kill|--stop) OPTION=s; shift ;;
         -x) if [[ -n $MUSIC_LIST ]]; then err_multi; exit 1; fi; MUSIC_LIST="Ex T-See"; shift ;;
