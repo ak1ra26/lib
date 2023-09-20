@@ -10,8 +10,6 @@ nikkiformat="%y%m-%d"; # %y%m-%d is default
 # connect config file if it exists
 if test -f /media/Data/Mega/sh/config/sh.cfg ; then . /media/Data/Mega/sh/config/sh.cfg;fi
 
-file="$a4dir`date +"$a4format"`"
-
 concatfiles(){
 files=($a4dir/2???-??);
 if [ "${#files[@]}" -gt "2" ]; then
@@ -53,20 +51,18 @@ fi
 [ ! -d "${a4dir}warg" ] && mkdir -p "${a4dir}warg"
 
 # Показує список файлів, якщо є атрибут -l.
-if [[ "$1" == ?(-)+("l")?(s) || "$1" == ?(-)+('li')?(st) || "$1" == ?(-)+("files") ]];then ls $a4dir;exit;fi
+[[ "$1" =~ ^-l ]] && ls "$a4dir" && exit
+
+file="$a4dir`date +"$a4format"`"
+
 # Відкриває файл за $1 день до поточної дати.
 if [[ $1 == ?(-)+([0-9]) ]];then file="$a4dir`date --date="$1"' day' +"$a4format"`";$a4editor $file & exit;fi
-
 if [[ "$1" == ?(-)+("shift")?(s) ]];then $a4editor ${a4dir}warg/shifts & exit;fi
 if [[ "$1" == ?(-)+("factorio")?(s) ]];then $a4editor ${a4dir}warg/factorio & exit;fi
 if [[ "$1" == ?(-)+("nikki") ]];then file="$nikkidir""`date +"$nikkiformat"`";$nikkieditor $file && concat2сс & exit;fi
 
-# Перевіряє наявність змінної $1.
-if [ -z ${1+x} ]; then
 # Створює файл, якщо ще не існує файлу А4 на сьогоднішню дату і змінна не визначена.
-if [ ! -f $file ]; then
-touch $file
-fi; fi
+[ -z ${1+x} ] && [ ! -f "$file" ] && touch "$file"
 
 # Запускає редактор та необхідний файл.
 $a4editor $file & concatfiles & exit
