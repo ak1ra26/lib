@@ -58,6 +58,7 @@ if [[ "$1" == ?(-)+("l")?(s) || "$1" == ?(-)+('li')?(st) || "$1" == ?(-)+("files
 if [[ $1 == ?(-)+([0-9]) ]];then file="$a4dir`date --date="$1"' day' +"$a4format"`";$a4editor $file & exit;fi
 
 if [[ "$1" == ?(-)+("shift")?(s) ]];then $a4editor ${a4dir}warg/shifts & exit;fi
+if [[ "$1" == ?(-)+("factorio")?(s) ]];then $a4editor ${a4dir}warg/factorio & exit;fi
 if [[ "$1" == ?(-)+("nikki") ]];then file="$nikkidir""`date +"$nikkiformat"`";$nikkieditor $file && concat2сс & exit;fi
 
 # Перевіряє наявність змінної $1.
@@ -68,7 +69,7 @@ touch $file
 fi; fi
 
 # Запускає редактор та необхідний файл.
-$a4editor $file && concatfiles & exit
+$a4editor $file & concatfiles & exit
 
 # __________________________________
 # Ідеї

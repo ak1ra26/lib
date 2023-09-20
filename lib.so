@@ -46,7 +46,6 @@ alias pgit=gpush
 
 # my scripts
 alias a4='$Dir_lib/scripts/a4.sh';
-alias a4e='$Dir_lib/scripts/a4.sh & exit';
 alias 2cc='$Dir_lib/scripts/a4.sh -nikki & exit';
 alias dv='$Dir_lib/scripts/dv.sh';
 alias t='$Dir_lib/scripts/tasks.sh';
