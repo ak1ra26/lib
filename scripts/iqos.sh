@@ -7,6 +7,11 @@ if [ "$1" == "-s" ]; then
     timestamp=$(date +"%s")
     echo "$timestamp" >> $file
     echo "Створено мітку часу: $timestamp"
+elif [ ! -s $file ]; then
+    echo -e ${c_red}"Файл з мітками порожній, або не існує."${NC}
+elif [ "$1" == "-c" ]; then
+    > $file
+    echo "Усі мітки видалено."
 else
     current_time=$(date +"%s")
 
