@@ -6,6 +6,7 @@ MUSIC_PLAYER="mpg123"
 MUSIC_LIST=""
 OPTION=""
 VERBOSE=false
+ROKS="http://online.radioroks.ua/RadioROKS"
 
 function err_multi {
 echo "${c_red}Error: multiple music lists specified${NC}"
@@ -100,6 +101,7 @@ while [[ "$#" -gt 0 ]]; do
         -m|-mm) if [[ -n $MUSIC_LIST ]]; then err_multi; exit 1; fi; MUSIC_LIST="Money Machine"; shift ;;
         -j|-jp) if [[ -n $MUSIC_LIST ]]; then err_multi; exit 1; fi; MUSIC_LIST="日本語の歌"; shift ;;
         -b|-bwu) if [[ -n $MUSIC_LIST ]]; then err_multi; exit 1; fi; MUSIC_LIST="BoyWithUke"; shift ;;
+        -r|-radio) if [[ -n $MUSIC_LIST ]]; then err_multi; exit 1; fi; MUSIC_LIST="$ROKS"; shift ;;
         *) echo -e "${c_red}Unknown parameter passed:${NC} $1"; exit 1 ;;
     esac
 done
@@ -132,11 +134,21 @@ fi
 kill_player
 
 if [[ "$MUSIC_PLAYER" == "vlc" ]]; then
+    if [[ "$MUSIC_LIST" == "$ROKS" ]]; then
+        echo "Playing radio station: Radio ROKS"
+        cvlc --no-video -I dummy "$MUSIC_LIST" > /dev/null 2>&1 & exit
+    else
     echo "Playing music list: $MUSIC_LIST"
     cvlc --random --no-video -I dummy "$MUSIC_PATH/$MUSIC_LIST/" > /dev/null 2>&1 & exit
+    fi
 elif [[ "$MUSIC_PLAYER" == "mpg123" ]]; then
+    if [[ "$MUSIC_LIST" == "$ROKS" ]]; then
+        echo "Playing radio station: Radio ROKS"
+        mpg123 -C -v "$MUSIC_LIST"
+    else
     echo "Playing music list: $MUSIC_LIST"
     mpg123 -C -Z -v "$MUSIC_PATH/$MUSIC_LIST/"*
+    fi
 else
     echo "Player with the name $MUSIC_PLAYER was not found."
 fi
