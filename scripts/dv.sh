@@ -28,14 +28,18 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ "${#urls[@]}" -eq 0 ]] && { echo "Error: No URL provided."; usage; }
-
-echo "${urls[@]}" | sed -e 's/https/ https/g; s/ /\n/g; /^$/d; s/&pkey=.+//' | awk '!seen[$0]++' > "$dv_last"
+echo "${urls[@]}" | sed -e 's/https/ https/g; s/ /\n/g; /^$/d' | awk '!seen[$0]++' > "$dv_last"
+# sed -i 's/&pkey=watchlater//g' "$dv_last"
+sed -i 's/\(&pkey=\|&list=\).*//g' "$dv_last"
 arrLinks=($(cat "$dv_last"))
 count=1
 for i in "${arrLinks[@]}"; do
     if [[ $i == *"w.youtube.com"* ]]; then
         dvpath="Videos/Youtube"
         log_file="dv_youtube"
+    elif [[ $i == *"w.tiktok.com"* ]]; then
+        dvpath="Videos/TikTok"
+        log_file="dv_tiktok"
     elif [[ -f "$config_file" ]]; then
         source "$config_file"
     else

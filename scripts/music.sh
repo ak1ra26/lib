@@ -13,7 +13,7 @@ echo "${c_red}Error: multiple music lists specified${NC}"
 }
 
 function usage {
-echo -e "Usage: music [-(playlist)|-p|-k] [-v] [-mpg]\n\
+echo -e "Usage: music [-(playlist)|-p|-k] [-v] [-mpg|-vlc]\n\
 Options:\n\
 -v|--verbose         Verbose output\n\
 -mpg|--mpg123        Use vlc instead of mpg123\n\
@@ -27,6 +27,9 @@ Playlists:\n\
 -ss                  Play 'Sweet Speeds' music list\n\
 -m|-mm               Play 'Money Machine' music list\n\
 -j|-jp               Play '日本語の歌' music list\n\
+\n\
+Radio station:\n\
+-r|--radio            Play 'Radio ROKS'\n\
 \n\
 Hint: if no playlist is specified, the default 'Liked Songs' will play"
 }
@@ -47,6 +50,21 @@ verbose "Checking for running $MUSIC_PLAYER processes that playing music…"
 if lsof +D "$MUSIC_PATH/" | grep -q "$MUSIC_PLAYER"; then
     verbose "${c_red}Process $MUSIC_PLAYER with files in the directory${NC} $MUSIC_PATH/ ${c_red}has been found.${NC}"
     player_pids=$(lsof +D "$MUSIC_PATH/" | awk '$1=="'"$MUSIC_PLAYER"'" {print $2}')
+    for pid in $player_pids; do
+        verbose "Killing the process with PID $pid…"
+        kill -s SIGTERM $pid
+        wait $pid 2>/dev/null
+        OK
+    done
+else
+    OK
+fi
+
+# Checking if the player's process is running and playing Radio ROKS.
+verbose "Checking for running $MUSIC_PLAYER processes playing Radio ROKS…"
+if ps aux | grep -v grep | grep "$MUSIC_PLAYER.*$ROKS" > /dev/null; then
+    verbose "${c_red}Process $MUSIC_PLAYER that playing ${NC}RadioROKS ${c_red}has been found.${NC}"
+    player_pids=$(ps aux | grep -v grep | grep "$MUSIC_PLAYER.*$ROKS" | awk '{print $2}')
     for pid in $player_pids; do
         verbose "Killing the process with PID $pid…"
         kill -s SIGTERM $pid
@@ -101,7 +119,7 @@ while [[ "$#" -gt 0 ]]; do
         -m|-mm) if [[ -n $MUSIC_LIST ]]; then err_multi; exit 1; fi; MUSIC_LIST="Money Machine"; shift ;;
         -j|-jp) if [[ -n $MUSIC_LIST ]]; then err_multi; exit 1; fi; MUSIC_LIST="日本語の歌"; shift ;;
         -b|-bwu) if [[ -n $MUSIC_LIST ]]; then err_multi; exit 1; fi; MUSIC_LIST="BoyWithUke"; shift ;;
-        -r|-radio) if [[ -n $MUSIC_LIST ]]; then err_multi; exit 1; fi; MUSIC_LIST="$ROKS"; shift ;;
+        -r|--radio) if [[ -n $MUSIC_LIST ]]; then err_multi; exit 1; fi; MUSIC_LIST="$ROKS"; shift ;;
         *) echo -e "${c_red}Unknown parameter passed:${NC} $1"; exit 1 ;;
     esac
 done
