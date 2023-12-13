@@ -37,7 +37,7 @@ alias updatec='yay -Syu && yay -Sc';
 alias myip='curl -s "https://ipinfo.io/ip" && echo'; # get my public IP adress
 alias autostart="function _create_autostart() { script_name=\$1; script_path=\$(realpath \$1); desktop_file=\"\$HOME/.config/autostart/\$(basename \$script_name).desktop\"; echo -e \"[Desktop Entry]\nType=Application\nName=\$(basename \$script_name)\nExec=\$script_path\nTerminal=false\nX-KDE-autostart-phase=1\" > \$desktop_file; chmod +x \$script_path; }; _create_autostart"
 alias libcheck='OK; echo "Path to lib: $Dir_lib"'
-alias learn_python='code $Dir_Data/Projects/Daigaku/Python/'
+DaiPyth=$Dir_Data/Projects/Daigaku/Python/; alias learn_python='code $DaiPyth & dolphin $DaiPyth & exit';
 
 # git
 gpush() {
