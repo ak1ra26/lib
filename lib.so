@@ -9,6 +9,8 @@ alias ls='ls --color=auto'; alias ді='ls'
 PS1='[\u@\h \W]\$ '
 export VISUAL=vim
 alias rm='rm -I --preserve-root' # на усяк випадок
+ulimit -u 1024   # Set a limit on the number of user processes
+ulimit -n 512  # Set a limit on the number of file descriptors
 
 # dirs
 Dir_Data=`lsblk -o MOUNTPOINT | grep 'Data'`
