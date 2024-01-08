@@ -9,8 +9,8 @@ alias ls='ls --color=auto'; alias ді='ls'
 PS1='[\u@\h \W]\$ '
 export VISUAL=vim
 alias rm='rm -I --preserve-root' # на усяк випадок
-ulimit -u 1024   # Set a limit on the number of user processes
-ulimit -n 512  # Set a limit on the number of file descriptors
+#ulimit -u 4096   # Set a limit on the number of user processes
+ulimit -n 1000  # Set a limit on the number of file descriptors
 
 # dirs
 Dir_Data=`lsblk -o MOUNTPOINT | grep 'Data'`
@@ -51,7 +51,8 @@ alias pgit=gpush
 alias a4='$Dir_lib/scripts/a4.sh';
 alias 2cc='$Dir_lib/scripts/a4.sh -nikki & exit';
 alias dv='$Dir_lib/scripts/dv.sh';
-alias t='$Dir_lib/scripts/tasks.sh';
+alias t_old='$Dir_lib/scripts/tasks.sh';
+alias t='python $Dir_Data/Projects/Github/work/Tasks/task.py';
 alias vpn='$Dir_lib/scripts/vpn.sh';
 alias m='$Dir_lib/scripts/music.sh'; alias music=m;
 alias sort='$Dir_lib/scripts/sort_downloads.sh';
