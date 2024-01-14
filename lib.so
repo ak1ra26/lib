@@ -40,6 +40,7 @@ alias myip='curl -s "https://ipinfo.io/ip" && echo'; # get my public IP adress
 alias autostart="function _create_autostart() { script_name=\$1; script_path=\$(realpath \$1); desktop_file=\"\$HOME/.config/autostart/\$(basename \$script_name).desktop\"; echo -e \"[Desktop Entry]\nType=Application\nName=\$(basename \$script_name)\nExec=\$script_path\nTerminal=false\nX-KDE-autostart-phase=1\" > \$desktop_file; chmod +x \$script_path; }; _create_autostart"
 alias libcheck='OK; echo "Path to lib: $Dir_lib"'
 alias learn_python='code $Dir_Data/Projects/Github/learn_python/ & dolphin $Dir_Data/Projects/Daigaku/Python/Udemy/ & exit';
+alias smtp='docker run --rm -it -p 3000:80 -p 2525:25 rnwood/smtp4dev'
 
 # git
 gpush() {
@@ -52,7 +53,7 @@ alias a4='$Dir_lib/scripts/a4.sh';
 alias 2cc='$Dir_lib/scripts/a4.sh -nikki & exit';
 alias dv='$Dir_lib/scripts/dv.sh';
 alias t_old='$Dir_lib/scripts/tasks.sh';
-alias t='python $Dir_Data/Projects/Github/work/Tasks/task.py';
+alias t='python $Dir_Data/Projects/Github/work/Listipy/listi.py'; alias l=t
 alias vpn='$Dir_lib/scripts/vpn.sh';
 alias m='$Dir_lib/scripts/music.sh'; alias music=m;
 alias sort='$Dir_lib/scripts/sort_downloads.sh';
