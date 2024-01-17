@@ -53,7 +53,7 @@ alias a4='$Dir_lib/scripts/a4.sh';
 alias 2cc='$Dir_lib/scripts/a4.sh -nikki & exit';
 alias dv='$Dir_lib/scripts/dv.sh';
 alias t_old='$Dir_lib/scripts/tasks.sh';
-alias t='python $Dir_Data/Projects/Github/work/Listipy/listi.py'; alias l=t
+alias t='python $Dir_Data/Projects/Github/Listipy/listi.py'; alias l=t
 alias vpn='$Dir_lib/scripts/vpn.sh';
 alias m='$Dir_lib/scripts/music.sh'; alias music=m;
 alias sort='$Dir_lib/scripts/sort_downloads.sh';
