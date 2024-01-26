@@ -4,7 +4,6 @@ init_i # initialize settings for interactive scripts
 a4dir=$Dir_Data/Projects/A4/;
 nikkidir=$Dir_Data/Projects/E日記/
 a4editor=kate;
-nikkieditor=kwrite;
 a4format="%y%m-%d"; # %y%m-%d is default
 nikkiformat="%y%m-%d"; # %y%m-%d is default
 # connect config file if it exists
@@ -59,7 +58,7 @@ file="$a4dir`date +"$a4format"`"
 if [[ $1 == ?(-)+([0-9]) ]];then file="$a4dir`date --date="$1"' day' +"$a4format"`";$a4editor $file & exit;fi
 if [[ "$1" == ?(-)+("shift")?(s) ]];then $a4editor ${a4dir}warg/shifts & exit;fi
 if [[ "$1" == ?(-)+("factorio")?(s) ]];then $a4editor ${a4dir}warg/factorio & exit;fi
-if [[ "$1" == ?(-)+("nikki") ]];then file="$nikkidir""`date +"$nikkiformat"`";$nikkieditor $file && concat2сс & exit;fi
+if [[ "$1" == ?(-)+("nikki") ]];then file="$nikkidir""`date +"$nikkiformat"`";$a4editor $file && concat2сс & exit;fi
 
 # Створює файл, якщо ще не існує файлу А4 на сьогоднішню дату і змінна не визначена.
 [ -z ${1+x} ] && [ ! -f "$file" ] && touch "$file"
@@ -73,3 +72,5 @@ $a4editor $file & concatfiles & exit
 # Видаляє файли, які містять менше 4 символів перед об'єднанням, але щоб це не стосувалося поточного дня.
 # Для 5 байтів це: find . -type f -size -5c -exec rm '{}' ';'
 # Але це з поточної директорії.
+
+# kwrite прибрав, бо з ним якась помилка була. На усяк випадок, щоб не втрачати файли.
