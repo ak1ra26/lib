@@ -21,7 +21,9 @@ Dir_config="$Dir_lib/.config"
 
 # functions
 for file in $Dir_lib/functions/*.fn; do . "$file"; done
-PROMPT_COMMAND='if [ $? -eq 127 ]; then command_not_found_handle "$(history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//")"; fi'
+
+# python modules
+export PYTHONPATH='/media/Data/Projects/Github/lib/modules'
 
 # shutdown & reboot
 if [ $UID -ne 0 ]; then
@@ -49,6 +51,7 @@ gpush() {
 alias pgit=gpush
 
 # my scripts
+alias s='python $Dir_Data/Projects/Github/ShiftWizard/main.py'; alias shifts=s
 alias a4='$Dir_lib/scripts/a4.sh';
 alias 2cc='$Dir_lib/scripts/a4.sh -nikki & exit';
 alias dv='$Dir_lib/scripts/dv.sh';
