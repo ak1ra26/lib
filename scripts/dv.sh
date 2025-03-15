@@ -50,8 +50,8 @@ for i in "${arrLinks[@]}"; do
 
     [ ! -d "$Dir_Data/Media/$dvpath" ] && mkdir -p "$Dir_Data/Media/$dvpath"
     OK "Downloading: $count from ${#arrLinks[@]}"
-    notify-send -a "DV" "Downloading" "$count from ${#arrLinks[@]}"
-    yt-dlp -P "$Dir_Data/Media/$dvpath" --cookies-from-browser firefox --mark-watched --download-archive "$Dir_cache/$log_file" -f 'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv*+ba/b' --concurrent-fragments 4 $i -o '%(title)s [%(id)s].%(ext)s' --no-warnings --no-simulate "${dv_vars[@]}"
+#     notify-send -a "DV" "Downloading" "$count from ${#arrLinks[@]}"
+    yt-dlp -P "$Dir_Data/Media/$dvpath" --cookies-from-browser firefox --mark-watched --download-archive "$Dir_cache/$log_file" -f 'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080][ext=mp4] / bv*[height<=1080]+ba/b[height<=1080]' --concurrent-fragments 4 $i -o '%(title)s [%(id)s].%(ext)s' --no-warnings --no-simulate "${dv_vars[@]}"
     count=$((count + 1))
 done
 
