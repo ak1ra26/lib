@@ -1,7 +1,7 @@
 # Setting up BASH
 export HISTCONTROL=ignoreboth:erasedups # ignoring duplicates in history
 #export HISTIGNORE='ls::#!*:set\ +o*:history*' # ignore specific commands
-export HISTIGNORE='ls:exit:reboot:l:gpush:a4*:shutdown*:#*:set\ +o*:history*' # ignore specific commands by ChatGPT... testing
+export HISTIGNORE='ls:exit:reboot:windscribe:s:c:gpush:pushg:vokoscreenNG:l:gpush:a4*:shutdown*:#*:set\ +o*:history*' # ignore specific commands by ChatGPT... testing
 PROMPT_COMMAND='history -a' # save command history until the end of the session
 export HISTTIMEFORMAT='%H:%M ' # add execution time
 set +H # disable history expansion in scripts to avoid "event not found" errors
@@ -10,7 +10,7 @@ PS1='[\u@\h \W]\$ '
 export VISUAL=vim
 alias rm='rm -I --preserve-root' # на усяк випадок
 #ulimit -u 4096   # Set a limit on the number of user processes
-ulimit -n 1000  # Set a limit on the number of file descriptors
+ulimit -n 2000  # Set a limit on the number of file descriptors
 
 # dirs
 Dir_Data=`lsblk -o MOUNTPOINT | grep 'Data'`
@@ -52,6 +52,10 @@ alias pgit=gpush
 
 # my scripts
 alias s='python $Dir_Data/Projects/Github/ShiftWizard/main.py'; alias shifts=s
+alias sw='python $Dir_Data/Projects/Github/ShiftWizardGUI/main.py';
+alias autotappy='python $Dir_Data/Projects/Github/Crypto/autotappy/menu.py';
+alias kate_taps='kate $Dir_Data/Projects/Github/Crypto/taps.py';
+alias getpixel='python $Dir_lib/scripts/getpixel.py';
 alias a4='$Dir_lib/scripts/a4.sh';
 alias 2cc='$Dir_lib/scripts/a4.sh -nikki & exit';
 alias dv='$Dir_lib/scripts/dv.sh';
@@ -61,5 +65,6 @@ alias vpn='$Dir_lib/scripts/vpn.sh';
 alias m='$Dir_lib/scripts/music.sh'; alias music=m;
 alias sort='$Dir_lib/scripts/sort_downloads.sh';
 alias iqos='$Dir_lib/scripts/iqos.sh';
+alias fix-broken='$Dir_lib/scripts/fix_broken_video.pl';
 
 URN=alex
