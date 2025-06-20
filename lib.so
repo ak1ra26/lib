@@ -35,7 +35,7 @@ alias pacman='sudo pacman'
 fi
 
 # my commands
-alias c='clear'; alias с='c'; # бо лінь
+alias c='clear'; alias с='c';
 alias update='yay -Syu';
 alias updatec='yay -Syu && yay -Sc';
 alias myip='curl -s "https://ipinfo.io/ip" && echo'; # get my public IP adress
@@ -51,8 +51,7 @@ gpush() {
 alias pgit=gpush
 
 # my scripts
-alias s='python $Dir_Data/Projects/Github/ShiftWizard/main.py'; alias shifts=s
-alias sw='python $Dir_Data/Projects/Github/ShiftWizardGUI/main.py';
+alias s='python $Dir_Data/Projects/Github/ShiftWizard/main.py';
 alias autotappy='python $Dir_Data/Projects/Github/Crypto/autotappy/menu.py';
 alias kate_taps='kate $Dir_Data/Projects/Github/Crypto/taps.py';
 alias getpixel='python $Dir_lib/scripts/getpixel.py';
@@ -68,5 +67,21 @@ alias sort='$Dir_lib/scripts/sort_downloads.sh';
 alias iqos='$Dir_lib/scripts/iqos.sh';
 alias fix-broken='$Dir_lib/scripts/fix_broken_video.pl';
 alias cpu-limiter='$Dir_lib/scripts/cpu-limiter.sh';
+alias showtemp='watch -n 1 sensors'
+
+getrange() {
+    echo "🎨 Клікни на піксель для зчитування кольору..."
+    eval $(xdotool selectwindow >/dev/null; xdotool getmouselocation --shell | grep -E "X=|Y=" | sed "s/^/pix_/")
+
+    getpixel True
+
+    echo "📐 Клікни першу точку діапазону..."
+    eval $(xdotool selectwindow >/dev/null; xdotool getmouselocation --shell | grep -E "X=|Y=" | sed "s/^/p1_/")
+
+    echo "📐 Клікни другу точку діапазону..."
+    eval $(xdotool selectwindow >/dev/null; xdotool getmouselocation --shell | grep -E "X=|Y=" | sed "s/^/p2_/")
+
+    echo "(($p1_X, $p1_Y), ($p2_X, $p2_Y))"
+}
 
 URN=alex
