@@ -64,7 +64,7 @@ if [[ "$1" == ?(-)+("nikki") ]];then file="$nikkidir""`date +"$nikkiformat"`";$a
 [ -z ${1+x} ] && [ ! -f "$file" ] && touch "$file"
 
 # Запускає редактор та необхідний файл.
-$a4editor $file & concatfiles & exit
+$a4editor $file & concatfiles && exit
 
 # __________________________________
 # Ідеї
