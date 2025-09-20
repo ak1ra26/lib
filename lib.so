@@ -50,6 +50,10 @@ gpush() {
 }
 alias pgit=gpush
 
+alias tg='/media/Data/Media/Downloads/Telegram/Telegram';
+alias telegram='tg';
+alias telegram-desktop='tg';
+
 # my scripts
 alias s='python $Dir_Data/Projects/Github/ShiftWizard/main.py';
 alias autotappy='python $Dir_Data/Projects/Github/Crypto/autotappy/menu.py';
@@ -57,7 +61,7 @@ alias kate_taps='kate $Dir_Data/Projects/Github/Crypto/taps.py';
 alias getpixel='python $Dir_lib/scripts/getpixel.py';
 alias getmouse="xdotool getmouselocation | awk '{print \$1, \$2}'"
 alias a4='$Dir_lib/scripts/a4.sh';
-alias 2cc='$Dir_lib/scripts/a4.sh -nikki & exit';
+alias 2cc='$Dir_lib/scripts/a4.sh -nikki';
 alias dv='$Dir_lib/scripts/dv.sh';
 alias t_old='$Dir_lib/scripts/tasks.sh';
 alias t='python $Dir_Data/Projects/Github/Listipy/listi.py'; alias l=t
