@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CACHE_DIR="$HOME/.cache/thumbnails"
-MAX_SIZE=42949672960  # 40GB in bytes
+MAX_SIZE=4294967296  # 4GB in bytes
 
 Get current cache size
 current_size=$(du -sb "$CACHE_DIR" | cut -f1)
