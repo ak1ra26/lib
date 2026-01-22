@@ -9,8 +9,8 @@ alias ls='ls --color=auto'; alias ді='ls'
 PS1='[\u@\h \W]\$ '
 export VISUAL=vim
 alias rm='rm -I --preserve-root' # на усяк випадок
-#ulimit -u 4096   # Set a limit on the number of user processes
-ulimit -n 2000  # Set a limit on the number of file descriptors
+#ulimit -u 64000   # Set a limit on the number of user processes
+ulimit -n 64000  # Set a limit on the number of file descriptors
 
 # dirs
 Dir_Data=`lsblk -o MOUNTPOINT | grep 'Data'`
@@ -72,6 +72,7 @@ alias iqos='$Dir_lib/scripts/iqos.sh';
 alias fix-broken='$Dir_lib/scripts/fix_broken_video.pl';
 alias cpu-limiter='$Dir_lib/scripts/cpu-limiter.sh';
 alias showtemp='watch -n 1 sensors'
+alias pingcheck='$Dir_lib/scripts/pingcheck.sh'
 
 getrange() {
     echo "🎨 Клікни на піксель для зчитування кольору..."
