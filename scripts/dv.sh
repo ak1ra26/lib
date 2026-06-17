@@ -1,6 +1,16 @@
 #!/bin/bash -i
 init_i # initialize settings for interactive scripts
 
+# це сховати на новій ОС
+# Force yt-dlp from virtualenv to avoid system Python issues
+YTDLP="$HOME/.venvs/yt-dlp/bin/yt-dlp"
+
+if [[ ! -x "$YTDLP" ]]; then
+    echo "Error: yt-dlp not found in venv at $YTDLP"
+    exit 1
+fi
+# кінець того що ховати
+
 config_file="$Dir_config/dv.cfg"
 dv_last="$Dir_cache/dv_last"
 
@@ -51,7 +61,9 @@ for i in "${arrLinks[@]}"; do
     [ ! -d "$Dir_Data/Media/$dvpath" ] && mkdir -p "$Dir_Data/Media/$dvpath"
     OK "Downloading: $count from ${#arrLinks[@]}"
 #     notify-send -a "DV" "Downloading" "$count from ${#arrLinks[@]}"
-    yt-dlp -P "$Dir_Data/Media/$dvpath" --cookies-from-browser firefox --mark-watched --download-archive "$Dir_cache/$log_file" -f 'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080][ext=mp4] / bv*[height<=1080]+ba/b[height<=1080]' --concurrent-fragments 4 $i -o '%(title).72s [%(id)s].%(ext)s' --no-warnings --no-simulate "${dv_vars[@]}"
+#     yt-dlp -P "$Dir_Data/Media/$dvpath" --cookies-from-browser firefox --mark-watched --download-archive "$Dir_cache/$log_file" --extractor-args "youtube:player_client=web,android" -f 'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080][ext=mp4] / bv*[height<=1080]+ba/b[height<=1080]' --concurrent-fragments 4 $i -o '%(title).72s [%(id)s].%(ext)s' --no-warnings --no-simulate "${dv_vars[@]}"
+#     count=$((count + 1))
+    "$YTDLP" -P "$Dir_Data/Media/$dvpath" --cookies-from-browser firefox --mark-watched --download-archive "$Dir_cache/$log_file" -f 'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080][ext=mp4] / bv*[height<=1080]+ba/b[height<=1080]' --concurrent-fragments 4 $i -o '%(title).72s [%(id)s].%(ext)s' --no-warnings --no-simulate "${dv_vars[@]}"
     count=$((count + 1))
 done
 

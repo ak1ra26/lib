@@ -32,24 +32,34 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Host to check connectivity against (reliable public DNS)
-CHECK_HOST="8.8.8.8"
+# Primary and secondary connectivity checks
+PING_HOST="8.8.8.8"
+HTTP_URL="https://www.google.com/generate_204"
 
 # Notification title
 NOTIFY_TITLE="Internet connection"
 
-# Startup message (printed once)
 echo "Internet connectivity monitor started."
 echo "Check interval set to ${INTERVAL} seconds."
 
 while true; do
-    # Ping the host once with a short timeout
-    if ! ping -c 1 -W 2 "$CHECK_HOST" > /dev/null 2>&1; then
-        # Send desktop notification if no connectivity
-        notify-send "$NOTIFY_TITLE" "No internet connection detected."
-        s_scream
+    # First check: ICMP ping
+    if ping -c 1 -W 2 "$PING_HOST" > /dev/null 2>&1; then
+        # Ping OK → internet is considered up, skip secondary check
+        sleep "$INTERVAL"
+        continue
     fi
 
-    # Wait before next check
+    # Second check: only if ping FAILED
+    if curl -s --max-time 5 "$HTTP_URL" > /dev/null; then
+        # HTTP OK → ping blocked or flaky, but internet exists
+        sleep "$INTERVAL"
+        continue
+    fi
+
+    # Both checks failed → real connectivity issue
+    notify-send "$NOTIFY_TITLE" "No internet connection detected."
+    s_scream
+
     sleep "$INTERVAL"
 done
